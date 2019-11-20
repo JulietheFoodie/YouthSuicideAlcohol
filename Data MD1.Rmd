@@ -1,0 +1,115 @@
+---
+title: "Markdown 1"
+author: "Julie Norman"
+date: "2/3/2019"
+output: html_document
+---
+
+---
+title: "Data Exploration"
+output: html_document
+---
+
+## libraries
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+library(haven)
+library(data.table)
+library(lubridate)
+
+setwd("~/Documents/Economics/YouthAlcoholSuicide/")
+```
+
+
+## Data Upload
+
+## suicide
+```{r}
+sui_df <- read_tsv("CensusSuicide (4).txt")
+
+sui_df2 <- df %>%
+  filter(is.na(Notes) == TRUE)
+
+totals_df <- filter(df, Notes == "Total")
+```
+
+```{r}
+str(sui_df)
+```
+
+
+
+## Illicit Substance Usage
+source: https://www.samhsa.gov/data/nsduh/state-reports-NSDUH-2016
+illicit drug general available for 2 of 3 years
+
+### Marijuana 
+Past month usage
+
+
+```{r}
+Marj16_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2016/NSDUHsaeTotals-Tab03-2016.csv", skip = 5) %>%
+  select(State, 'Marijuana Counts' = '12-17 Estimate') 
+Marj16_df$Year <- "2016"
+
+Marj15_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2015/NSDUHsaeTotals-Tab02-2015.csv", skip = 5) %>%
+  select(State, 'Marijuana Counts' = '12-17 Estimate') 
+Marj15_df$Year <- "2015"
+
+Marj14_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2014/NSDUHsaeTotalsTab02-2014.csv", skip = 4) %>%
+  select(State, 'Marijuana Counts' = '12-17 Estimate') 
+Marj14_df$Year <- "2014"
+
+Marj_df <- rbind(Marj14_df, Marj15_df) %>%
+  rbind(Marj16_df)
+```
+
+### Alcohol 
+Past month usage
+
+```{r}
+Alco16_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2016/NSDUHsaeTotals-Tab12-2016.csv", skip = 5) %>%
+  select(State, 'Alcohol Counts' = '12-17 Estimate') 
+Alco16_df$Year <- "2016"
+
+Alco15_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2015/NSDUHsaeTotals-Tab06-2015.csv", skip = 5) %>%
+  select(State, 'Alcohol Counts' = '12-17 Estimate') 
+Alco15_df$Year <- "2015"
+
+Alco14_df <- read_csv("NSDUH/NSDUHsaeTotalsCSVs-2014/NSDUHsaeTotalsTab09-2014.csv", skip = 4) %>%
+  select(State, 'Alcohol Counts' = '12-17 Estimate') 
+Alco14_df$Year <- "2014"
+
+Alco_df <- rbind(Alco14_df, Alco15_df) %>%
+  rbind(Alco16_df)
+```
+
+
+### Join
+
+```{r}
+Region <- c("Northeast" , "Midwest" , "South" , "West")
+
+
+
+Drug_df <- left_join(Marj_df, Alco_df) %>%
+  filter(State %in% Region )
+
+Drug_df$Year <- as.numeric(Drug_df$Year)
+
+df <- left_join(sui_df2, Drug_df, c("Year" = "Year", filter(sui_df2, 'Census Region' %in% contains(Region)) = filter(Drug_df, State %in% contains(Region) ) ))
+```
+
+
+
+
+
+
+
+
+
+
+
