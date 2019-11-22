@@ -1,0 +1,48 @@
+---
+title: "Exploration"
+author: "Julie Norman"
+date: "11/21/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+str(df)
+```
+
+
+```{r}
+ggplot(df, aes(y = `Crude Rate`, x = `Marj Usage`, color = Year)) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+ggplot(df, aes(y = Deaths, x = `Marj Usage`, color = Year)) + 
+  geom_point()
+```
+
+
+```{r}
+ggplot(cdf, aes(y = `Crude Rate`, x = `Alco Usage`, color = Year)) + 
+  xlab("Alcohol Usage Percent Among 12-17") + 
+  ylab("Suicide Rate for 12-17") +
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+```{r}
+ggplot(sdf, aes(y = `Crude Rate`, x = `Alco Usage`)) + 
+  xlab("Alcohol Usage Percent Among 12-17") + 
+  ylab("Suicide Rate for 12-17") +
+  geom_point() +
+    geom_smooth(method = "lm")
+```
+
